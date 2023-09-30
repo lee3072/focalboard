@@ -14,6 +14,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.focalboard.rule=Host(`seungheon.ddns.net`)"
       - "traefik.http.routers.focalboard.entrypoints=web,websecure"
+      - "traefik.http.routers.focalboard.tls.certresolver=myresolver"
       - "traefik.http.services.focalboard.loadbalancer.server.port=8000"
     volumes:
       - "./config.json:/opt/focalboard/config.json"
@@ -32,6 +33,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--providers.file.filename=/etc/traefik/traefik_dynamic.toml"
     ports:
       - 80:80
       - 443:443
@@ -39,6 +41,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - D:\OneDrive - University of Southern California\focalboard\certs\live\seungheon.ddns.net:/certs
+      - ./traefik_dynamic.toml:/etc/traefik/traefik_dynamic.toml
 
   focalboard-db:
     image: postgres:latest
