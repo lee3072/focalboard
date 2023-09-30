@@ -13,7 +13,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.focalboard.rule=Host(`seungheon.ddns.net`)"
-      - "traefik.http.routers.focalboard.entrypoints=web,websecure"
+      - "traefik.http.routers.focalboard.entrypoints=websecure"
       - "traefik.http.routers.focalboard.tls.certresolver=myresolver"
       - "traefik.http.services.focalboard.loadbalancer.server.port=8000"
     volumes:
@@ -31,11 +31,9 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--providers.file.filename=/etc/traefik/traefik_dynamic.toml"
     ports:
-      - 80:80
       - 443:443
       - 5000:8080 # For Traefik Dashboard (optional)
     volumes:
