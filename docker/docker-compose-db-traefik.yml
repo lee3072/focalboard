@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: focalboard
+    depends_on:
+      - focalboard-db
+    expose:
+      - 8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.focalboard.rule=Host(`seungheon.ddns.net`)"
+      - "traefik.http.routers.focalboard.entrypoints=web,websecure"
+      - "traefik.http.services.focalboard.loadbalancer.server.port=8000"
+    volumes:
+      - "./config.json:/opt/focalboard/config.json"
+      - D:\OneDrive - University of Southern California\focalboard\fbdata:/opt/focalboard/data
+    restart: always
+    networks:
+      - proxy
+      - default
+
+  traefik:
+    image: traefik:v2.5
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - 80:80
+      - 443:443
+      - 5000:8080 # For Traefik Dashboard (optional)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - D:\OneDrive - University of Southern California\focalboard\certs\live\seungheon.ddns.net:/certs
+
+  focalboard-db:
+    image: postgres:latest
+    container_name: focalboard-postgres
+    restart: always
+    volumes:
+      - D:\OneDrive - University of Southern California\focalboard\pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: boards
+      POSTGRES_USER: boardsuser
+      POSTGRES_PASSWORD: boardsuser-password
+
+networks:
+  proxy:
