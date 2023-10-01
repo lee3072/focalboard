@@ -35,8 +35,8 @@ docker-compose up
 
 This will automatically build the focalboard image and start it with the http port mapping. These examples also create a persistent named volume called `fbdata`.
 
-To run Focalboard with a nginx proxy and a postgres backend, change directory to `focalboard/docker` and run:
+To run Focalboard with a traefik proxy and a postgres backend, change directory to `focalboard/docker` and run:
 
 ```bash
-docker-compose -f docker-compose-db-nginx.yml up
+docker-compose -p focalboardserver -f .\docker-compose-db-traefik.yml up
 ```
