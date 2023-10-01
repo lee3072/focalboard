@@ -31,15 +31,16 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.directory=/etc/traefik/dynamic"
       - "--entrypoints.websecure.address=:443"
-      - "--providers.file.filename=/etc/traefik/traefik_dynamic.toml"
+      - "--log.level=DEBUG"
     ports:
       - 443:443
       - 5000:8080 # For Traefik Dashboard (optional)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - D:\OneDrive - University of Southern California\focalboard\certs\live\seungheon.ddns.net:/certs
-      - ./traefik_dynamic.toml:/etc/traefik/traefik_dynamic.toml
+      - D:\OneDrive - University of Southern California\focalboard\certs:/etc/certs/
+      - .\certs-traefik.yaml:/etc/traefik/dynamic/certs-traefik.yaml
 
   focalboard-db:
     image: postgres:latest
